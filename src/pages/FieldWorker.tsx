@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Camera, MapPin, Upload, Leaf } from "lucide-react";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 const FieldWorker = () => {
   const { toast } = useToast();
@@ -57,24 +58,73 @@ const FieldWorker = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      let uploadedImageUrls: string[] = [];
 
-    toast({
-      title: "Site data submitted!",
-      description: "Your restoration site data has been successfully recorded."
-    });
+      // Upload images to storage if any
+      if (formData.images.length > 0) {
+        for (const image of formData.images) {
+          const fileExt = image.name.split('.').pop();
+          const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+          
+          const { error: uploadError } = await supabase.storage
+            .from('site-images')
+            .upload(fileName, image);
 
-    // Reset form
-    setFormData({
-      images: [],
-      latitude: "",
-      longitude: "",
-      plantationType: "",
-      areaCovered: "",
-      notes: ""
-    });
-    setIsSubmitting(false);
+          if (uploadError) {
+            throw uploadError;
+          }
+
+          // Get public URL
+          const { data: { publicUrl } } = supabase.storage
+            .from('site-images')
+            .getPublicUrl(fileName);
+          
+          uploadedImageUrls.push(publicUrl);
+        }
+      }
+
+      // Save to database
+      const { error: insertError } = await supabase
+        .from('sites')
+        .insert({
+          latitude: parseFloat(formData.latitude),
+          longitude: parseFloat(formData.longitude),
+          plantation_type: formData.plantationType,
+          area: parseFloat(formData.areaCovered),
+          uploaded_image_url: uploadedImageUrls[0] || null, // Store first image URL
+          field_worker_id: '00000000-0000-0000-0000-000000000000', // Placeholder for now
+          date_of_plantation: new Date().toISOString()
+        });
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      toast({
+        title: "Site data submitted!",
+        description: "Your restoration site data has been successfully recorded."
+      });
+
+      // Reset form
+      setFormData({
+        images: [],
+        latitude: "",
+        longitude: "",
+        plantationType: "",
+        areaCovered: "",
+        notes: ""
+      });
+    } catch (error) {
+      console.error('Error submitting data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to submit site data. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

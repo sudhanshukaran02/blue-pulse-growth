@@ -31,6 +31,12 @@ const Home = () => {
                   Buyer Dashboard
                 </Button>
               </Link>
+              <Link to="/projects">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                  <Leaf className="mr-2 h-5 w-5" />
+                  View Projects
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
