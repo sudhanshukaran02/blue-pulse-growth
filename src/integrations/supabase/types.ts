@@ -14,6 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
+      buyers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          purchased_credits: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          purchased_credits?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          purchased_credits?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      credit_purchases: {
+        Row: {
+          buyer_id: string
+          credits: number
+          currency: string
+          id: number
+          price_per_tonne: number
+          purchased_at: string
+          site_id: string | null
+        }
+        Insert: {
+          buyer_id: string
+          credits: number
+          currency?: string
+          id?: never
+          price_per_tonne: number
+          purchased_at?: string
+          site_id?: string | null
+        }
+        Update: {
+          buyer_id?: string
+          credits?: number
+          currency?: string
+          id?: never
+          price_per_tonne?: number
+          purchased_at?: string
+          site_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_purchases_buyer_id_fkey"
+            columns: ["buyer_id"]
+            isOneToOne: false
+            referencedRelation: "buyers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credit_purchases_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       field_data: {
         Row: {
           area: number | null
@@ -41,6 +113,33 @@ export type Database = {
           latitude?: number
           longitude?: number
           plantation_type?: string | null
+        }
+        Relationships: []
+      }
+      field_workers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          phone?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -75,6 +174,83 @@ export type Database = {
             columns: ["site_id"]
             isOneToOne: false
             referencedRelation: "field_data"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          role: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sites: {
+        Row: {
+          area: number
+          carbon_estimate_tonnes: number | null
+          created_at: string
+          date_of_plantation: string | null
+          field_worker_id: string
+          id: string
+          latitude: number
+          longitude: number
+          ndvi_avg: number | null
+          plantation_type: string
+          updated_at: string
+          uploaded_image_url: string | null
+        }
+        Insert: {
+          area: number
+          carbon_estimate_tonnes?: number | null
+          created_at?: string
+          date_of_plantation?: string | null
+          field_worker_id: string
+          id?: string
+          latitude: number
+          longitude: number
+          ndvi_avg?: number | null
+          plantation_type: string
+          updated_at?: string
+          uploaded_image_url?: string | null
+        }
+        Update: {
+          area?: number
+          carbon_estimate_tonnes?: number | null
+          created_at?: string
+          date_of_plantation?: string | null
+          field_worker_id?: string
+          id?: string
+          latitude?: number
+          longitude?: number
+          ndvi_avg?: number | null
+          plantation_type?: string
+          updated_at?: string
+          uploaded_image_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sites_field_worker_id_fkey"
+            columns: ["field_worker_id"]
+            isOneToOne: false
+            referencedRelation: "field_workers"
             referencedColumns: ["id"]
           },
         ]
