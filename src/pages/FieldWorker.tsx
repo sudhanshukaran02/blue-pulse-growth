@@ -138,8 +138,31 @@ const FieldWorker = () => {
                   </div>
                 </div>
                 {formData.images.length > 0 && (
-                  <div className="text-sm text-muted-foreground">
-                    {formData.images.length} image(s) selected
+                  <div className="space-y-3">
+                    <div className="text-sm text-muted-foreground">
+                      {formData.images.length} image(s) selected
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                      {formData.images.map((file, index) => (
+                        <div key={index} className="relative">
+                          <img
+                            src={URL.createObjectURL(file)}
+                            alt={`Preview ${index + 1}`}
+                            className="w-full h-24 object-cover rounded-lg border"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setFormData(prev => ({
+                              ...prev,
+                              images: prev.images.filter((_, i) => i !== index)
+                            }))}
+                            className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-destructive/80"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
