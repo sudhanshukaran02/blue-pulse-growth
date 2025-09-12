@@ -19,22 +19,22 @@ const Home = () => {
               Connecting field workers with carbon credit buyers through satellite data and AI.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/field-worker">
+              <Link to="/login">
                 <Button variant="hero" size="lg" className="w-full sm:w-auto">
+                  <Users className="mr-2 h-5 w-5" />
+                  Sign In
+                </Button>
+              </Link>
+              <Link to="/field-worker">
+                <Button variant="ocean" size="lg" className="w-full sm:w-auto">
                   <Camera className="mr-2 h-5 w-5" />
                   Field Worker Portal
                 </Button>
               </Link>
               <Link to="/buyer">
-                <Button variant="ocean" size="lg" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto">
                   <BarChart3 className="mr-2 h-5 w-5" />
                   Buyer Dashboard
-                </Button>
-              </Link>
-              <Link to="/projects">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                  <Leaf className="mr-2 h-5 w-5" />
-                  View Projects
                 </Button>
               </Link>
             </div>

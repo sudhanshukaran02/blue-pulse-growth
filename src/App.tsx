@@ -7,6 +7,9 @@ import Home from "./pages/Home";
 import FieldWorker from "./pages/FieldWorker";
 import Buyer from "./pages/Buyer";
 import Projects from "./pages/Projects";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,6 +22,9 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/field-worker" element={<FieldWorker />} />
           <Route path="/buyer" element={<Buyer />} />
           <Route path="/projects" element={<Projects />} />
