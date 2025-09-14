@@ -7,7 +7,6 @@ import { Eye, EyeOff, Loader2, ArrowLeft, Leaf } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { NGORegistrationDialog } from "@/components/NGORegistrationDialog";
 
 const FieldWorkerLogin = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +14,6 @@ const FieldWorkerLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isResettingPassword, setIsResettingPassword] = useState(false);
-  const [showNGODialog, setShowNGODialog] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -100,25 +98,11 @@ const FieldWorkerLogin = () => {
           return;
         }
 
-        // Check if NGO details already exist
-        const { data: ngoData } = await supabase
-          .from('ngos')
-          .select('id')
-          .eq('field_worker_id', data.user.id)
-          .single();
-
         toast({
           title: "Success",
           description: "Successfully signed in as field worker!",
         });
-
-        if (!ngoData) {
-          // Show NGO registration dialog if no NGO data exists
-          setShowNGODialog(true);
-        } else {
-          // Navigate directly if NGO data exists
-          navigate("/field-worker");
-        }
+        navigate("/field-worker");
       }
     } catch (error) {
       toast({
@@ -180,18 +164,9 @@ const FieldWorkerLogin = () => {
     }
   };
 
-  const handleNGODialogClose = (open: boolean) => {
-    setShowNGODialog(open);
-    if (!open) {
-      // Navigate to field worker page after dialog closes
-      navigate("/field-worker");
-    }
-  };
-
   return (
-    <>
-      <div className="min-h-screen bg-gradient-forest flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 via-background/80 to-primary/10" />
+    <div className="min-h-screen bg-gradient-forest flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 via-background/80 to-primary/10" />
       
       <Card className="relative w-full max-w-md shadow-secondary border-secondary/20">
         <CardHeader className="space-y-1">
@@ -311,13 +286,7 @@ const FieldWorkerLogin = () => {
           </div>
         </CardContent>
       </Card>
-      
-      <NGORegistrationDialog 
-        open={showNGODialog} 
-        onOpenChange={handleNGODialogClose} 
-      />
     </div>
-    </>
   );
 };
 
