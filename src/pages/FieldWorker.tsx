@@ -59,6 +59,18 @@ const FieldWorker = () => {
     setIsSubmitting(true);
 
     try {
+      // Check if user is authenticated
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Authentication required",
+          description: "Please log in to submit site data.",
+          variant: "destructive"
+        });
+        return;
+      }
+
       let uploadedImageUrls: string[] = [];
 
       // Upload images to storage if any
@@ -93,7 +105,7 @@ const FieldWorker = () => {
           plantation_type: formData.plantationType,
           area: parseFloat(formData.areaCovered),
           uploaded_image_url: uploadedImageUrls[0] || null, // Store first image URL
-          field_worker_id: '00000000-0000-0000-0000-000000000000', // Placeholder for now
+          field_worker_id: user.id, // Use authenticated user's ID
           date_of_plantation: new Date().toISOString()
         });
 
